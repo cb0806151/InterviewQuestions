@@ -96,3 +96,20 @@ let items = [
         "end": "2019-12-09T21:00:00-06:00"
     }
 ];
+
+function translateDateArray(dateArray) {
+    dateArray.forEach((entry, index, newDateArray) => {
+        startKey = Object.keys(entry)[0]
+        endKey = Object.keys(entry)[1]
+        newDateArray[index] = {
+            [startKey]: new Date(entry[startKey]).toString(),
+            [endKey]: new Date(entry[endKey]).toString()
+        }
+    });
+    return dateArray;
+}
+
+console.log(
+    [items[0]], 
+    [translateDateArray(items)[0]]
+);
