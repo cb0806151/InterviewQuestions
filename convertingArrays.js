@@ -113,3 +113,38 @@ let items =  [
         "count": "3"
     }
 ];
+
+function aggregateCallTypes(callTypes) {
+    let aggregatedItems = [];
+    let aggregatedItemIndexes = {};
+
+    callTypes.forEach(entry => {
+        let regionName = entry["regions"]["name"];
+        
+        let itemIndex;
+        if (aggregatedItemIndexes[regionName] === undefined) aggregatedItemIndexes[regionName] = Object.keys(aggregatedItemIndexes).length;
+        itemIndex = aggregatedItemIndexes[regionName];
+        
+        let callCount = parseInt(entry["count"]);
+        let callDescription = entry["call_types"]["type"];
+        let callDescriptionKey = (callDescription === "Wrong Company (see notes)") 
+                                    ? 
+                                "wrong_company" 
+                                    : 
+                                callDescription.toLowerCase().replace(/ /g, "_");
+        
+        aggregatedItems[itemIndex] = (aggregatedItems[itemIndex] || {});
+
+        aggregatedItems[itemIndex]["name"] = regionName;
+
+        aggregatedItems[itemIndex]["region"] = entry["region"];
+
+        aggregatedItems[itemIndex]["total"] = (aggregatedItems[itemIndex]["total"] || 0) + callCount;
+
+        aggregatedItems[itemIndex][callDescriptionKey] = (aggregatedItems[itemIndex][callDescriptionKey] || 0) + callCount;
+    });
+
+    return aggregatedItems;
+}
+
+console.log(aggregateCallTypes(items));
